@@ -1,3 +1,6 @@
+{- Basic Haskell example calculating the nth number of the fibonacci sequence
+ - using user input and then outputting to stdout
+ -}
 import System.Environment
 
 fib :: Int -> Int
