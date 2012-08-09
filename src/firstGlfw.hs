@@ -15,10 +15,17 @@ rendLoop = do
         GLFW.windowCloseCallback $= (writeIORef quit True >> return True)
 
         -- start main loop and define it using where clause
-        loop quit where
+        -- waitForPress
+        loop quit 
+        where
             loop quit = do
+                GLFW.waitEvents
                 q <- readIORef quit
                 unless q $ loop quit
+           --  
+           --  waitForPress = do
+           --      GLFW.keyCallback $= \b k ->
+           --          when (b == GLFW.KeyEsc && k == GLFW.Press)
 
 main = do
     -- initialize GLFW
