@@ -28,10 +28,16 @@ rendLoop = do
         --
         --   alternatively could use the following as callback:
         --          do
+        --              writeIORef quit True
         --              GLFW.closeWindow
         --              GLFW.terminate
         --              return True
-        GLFW.windowCloseCallback $= (writeIORef quit True >> return True)
+        -- GLFW.windowCloseCallback $= (writeIORef quit True >> return True)
+        GLFW.windowCloseCallback $= do
+            writeIORef quit True
+            GLFW.closeWindow
+            GLFW.terminate
+            return True
 
         -- start main loop and define it using where clause
         loop quit 
@@ -56,5 +62,5 @@ main = do
     GLFW.windowTitle $= "butts"
     GL.clearColor $= Color4 0 0 0 0
     rendLoop
-    GLFW.closeWindow
-    GLFW.terminate
+    -- GLFW.closeWindow
+    -- GLFW.terminate
