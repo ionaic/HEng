@@ -12,6 +12,9 @@ rendLoop = do
         -- i believe it's just a flag and it lets you stop the program if 
         -- quit is true, because type of the RHS of the equation is an
         -- IO Bool, which is really just a Bool in an IO monad....
+        --
+        -- UPDATE: the windowCloseCallback I belive just needs to be a flag
+        --   of close or no
         GLFW.windowCloseCallback $= (writeIORef quit True >> return True)
 
         -- start main loop and define it using where clause
