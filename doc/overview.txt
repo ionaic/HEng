@@ -1,0 +1,1 @@
+Haskell based game engine, either based on SDL or OpenGL, possibly versions for both.  2D graphics.
