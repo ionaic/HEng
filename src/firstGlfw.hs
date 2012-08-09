@@ -2,7 +2,6 @@ import Graphics.UI.GLFW as GLFW
 import Graphics.Rendering.OpenGL as GL
 import Data.IORef
 import Control.Monad
-import System.Environment
 
 rendLoop = do 
         -- set up a flag to check if the window is closed
