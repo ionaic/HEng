@@ -1,0 +1,11 @@
+import Graphics.UI.GLFW as glfw
+import Graphics.Rendering.OpenGL as gl
+import System.Environment
+
+main = do
+-- initialize glfw
+    glfw.initialize
+
+-- open a window 
+    glfwOpenWindow (gl.Size 300 300) [glfw.DisplayAlphaBits 8] glfw.Window
+    
