@@ -7,4 +7,4 @@ fib num = (fib $ num - 1) + (fib $ num - 2)
 
 main = do 
         [f] <- getArgs
-        putStrLn $ show $ (fib (read f::Int))
+        putStrLn . show . fib $ (read f::Int)
