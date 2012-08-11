@@ -9,25 +9,27 @@ render = do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         
 
-rendMain = do 
+--rendMain = do 
+rendMain =
         -- set up a flag to check if the window is closed
-        quit <- newIORef False
- 
+        --quit <- newIORef False
+        newIORef False >>= \quit -> 
+
         -- set up the window close callback function
-        GLFW.windowCloseCallback $= (writeIORef quit True >> GLFW.closeWindow >> GLFW.terminate >> return True)
+        GLFW.windowCloseCallback $= (writeIORef quit True >> GLFW.closeWindow >> GLFW.terminate >> return True) >>
 
         -- Set the clear color
-        GL.clearColor $= Color4 0 0 0 0
+        GL.clearColor $= Color4 0 0 0 0 >>
 
         -- Set clearDepth
-        GL.clearDepth $= 1.0
+        GL.clearDepth $= 1.0 >>
 
         -- enable and set depth function
         -- replaces glEnable(GL_DEPTH_TEST) and glDepthFunc(GL_LEQUAL)
-        depthFunc $= Just Lequal
+        depthFunc $= Just Lequal >> 
 
         -- start main loop and define it using where clause
-        loop quit 
+        loop quit
         where
             -- loop quit = do
             loop quit =
