@@ -5,8 +5,8 @@ import Control.Monad
 
 --initGeometry = 
 
-render = do 
-        GL.clear [GL.ColorBuffer, GL.DepthBuffer]
+-- render = do
+render = GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         
 
 --rendMain = do 
