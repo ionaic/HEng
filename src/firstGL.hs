@@ -1,7 +1,11 @@
 import Graphics.UI.GLFW as GLFW
 import Graphics.Rendering.OpenGL as GL
-import Data.IORef
-import Control.Monad
+import Data.IORef --for the IORef state stuff
+-- import Control.Monad --for stuff like unless, no longer used
+import Data.Array.MArray --for the array operations (like newListArray)
+import Data.Array.Storable --for some of the Ptr stuff
+import Foreign.Ptr --for more of the pointer stuff
+import Foreign.Storable (sizeOf)--for sizeOf
 
 -- data Resources = Resources {vertexArrayVBO :: BufferObject,
 --                            elementBufferVBO :: BufferObject}
@@ -16,7 +20,25 @@ rawColorData :: [GLfloat]
 rawColorData = [1.0, 0.0, 0.0,  0.0, 1.0, 0.0,  0.0, 0.0, 1.0]
 
 --initGeometry = bindBuffer ArrayBuffer (makeStateVar Resources vertexArrayVBO)
-initGeometry = genObjectNames 1 >>= \x@(vbo:t) -> bindBuffer ArrayBuffer $= Just vbo
+-- genObjectNames is _____
+-- bindBuffer is a function bindBuffer :: BufferTarget -> ionno something which
+--      basically lets you set that type of buffer to something?
+-- newListArray makes an array from a list, taking an argument (i, j) where i is
+--      the lower bound of indices and j is the upper bound (this array goes
+--      from 0 to length)
+initGeometry :: IO BufferObject
+initGeometry = genObjectNames 1 >>= 
+        \x@(vbo:t) -> bindBuffer ArrayBuffer $= Just vbo >> 
+            newListArray (0, length rawVertexData - 1) rawVertexData >>=
+            \arr -> withStorableArray arr (\ptr ->
+                bufferData ArrayBuffer $= (toEnum $ length rawVertexData * (sizeOf $ head rawVertexData), ptr, StaticDraw)) >> 
+            bindBuffer ArrayBuffer $= Nothing >>
+            return vbo
+
+-- a really cool, elegant solution to finding size of the pointer, found on
+--      le interwebs
+--where ptrsize [] = toEnum 0
+--          ptrsize x:xs = toEnum $ length elems * (sizeOf x)
         
 
 
