@@ -39,17 +39,14 @@ initBuffer rawData = genObjectNames 1 >>=
             return vbo
 
 -- builds Resources by calling initBuffer on the vertex and color data
-initGeometry :: IO Resources
-initGeometry = liftM2 Resources (initBuffer rawVertexData) (initBuffer rawColorData)
+initGeometry :: Resources
+initGeometry = Resources `ap` (initBuffer . rawVertexData) `ap` (initBuffer . rawColorData) >>= \res -> return res
 
 render :: Resources -> IO Bool
 render res = GL.clear [GL.ColorBuffer] >>
-        bindBuffer ArrayBuffer $= Just arr >>
-        drawArrays Triangles (fst arrBounds) (read . show . snd $ arrBounds :: NumArrayIndices) >>
+        bindBuffer ArrayBuffer $= vertexArrayVBO res >>
+        drawArrays Triangles (fst . getBounds $ vertexArrayVBO res) (snd .getBounds $ vertexArrayVBO res) >>
         return True
-        where
-            arr = vertexArrayVBO res
-            arrBounds = (0, length rawVertexData - 1)
 
 rendMain :: IO Bool
 rendMain =
@@ -73,22 +70,22 @@ rendMain =
         depthFunc $= Just Lequal >> 
         
         -- initialize geometry
-        initGeometry >>= \res ->
+        initGeometry >>
 
         -- start main loop and define it using where clause
-        loop res quit
+        loop quit
         where
-            loop res quit =
+            loop quit =
                 -- Tells GLFW to look for event callbacks
                 GLFW.waitEvents >>
                 
                 -- Actively redraw window
-                render res >> GLFW.swapBuffers >>
+                render >> GLFW.swapBuffers >>
 
                 -- read if quit has been called or not
                 -- if quit is false, continue loop.  otherwise we're done!
                 readIORef quit >>= \q -> case q of 
-                    False -> loop res quit
+                    False -> loop quit
                     _ -> return True
 
 main =
